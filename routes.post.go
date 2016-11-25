@@ -16,21 +16,21 @@ func toHTML(s string) template.HTML {
 func allPosts(c *gin.Context) {
 	posts := models.AllPosts(db)
 	c.HTML(http.StatusOK,
-		"post_index.tmpl", posts)
+		"index_post.tmpl", posts)
 }
 
 func postByTag(c *gin.Context) {
 	post := models.FindPost(db, c.Param("slug"))
 	c.HTML(
 		http.StatusOK,
-		"post.tmpl",
+		"view_post.tmpl",
 		gin.H{
 			"title": post.Title,
 			"body":  toHTML(post.Body),
 		})
 }
 
-func new(c *gin.Context) {
+func create(c *gin.Context) {
 	post := models.Post{
 		Title:    c.PostForm("title"),
 		Body:     c.PostForm("body"),
@@ -41,14 +41,17 @@ func new(c *gin.Context) {
 	returnPostStatus(c, "Post Created", post)
 }
 
-func post(c *gin.Context) {
-	c.HTML(http.StatusOK, "new_post.tmpl", gin.H{})
+func new(c *gin.Context) {
+	c.HTML(http.StatusOK, "form_post.tmpl", gin.H{
+		"path": "/admin/posts/create",
+	})
 
 }
 
 func edit(c *gin.Context) {
 	post := models.FindPost(db, c.Param("slug"))
-	c.HTML(http.StatusOK, "edit_post.tmpl", gin.H{
+	c.HTML(http.StatusOK, "form_post.tmpl", gin.H{
+		"path":     "/admin/posts/update",
 		"title":    post.Title,
 		"markdown": post.Markdown,
 		"slug":     post.Slug,

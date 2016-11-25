@@ -11,32 +11,31 @@ var db, err = database.InitDB()
 
 func main() {
 	router := gin.Default()
-	router.LoadHTMLGlob("templates/*")
+	router.LoadHTMLGlob("templates/**/*")
 
 	db.DB()
 	db.AutoMigrate(&models.Post{}, &models.User{}, &models.UserSession{})
 
 	router.GET("/", index)
 	router.GET("/about", about)
+	router.POST("/login", login)
 
 	posts := router.Group("/posts")
 	{
 		posts.GET("/", allPosts)
 		posts.GET("/:slug", postByTag)
-
 	}
 
 	admin := router.Group("/admin")
 	{
-		admin.GET("/", allPosts)
-		admin.GET("/new", post)
-		admin.POST("/new", new)
-		admin.GET("/update/:slug", edit)
-		admin.POST("/update", update)
-		admin.POST("/delete", delete)
-		admin.POST("/undelete", undelete)
+		admin.GET("/posts", index)
+		admin.GET("/posts/new", new)
+		admin.POST("/posts/create", create)
+		admin.GET("/posts/edit/:slug", edit)
+		admin.POST("/posts/update", update)
+		admin.POST("/posts/delete", delete)
+		admin.POST("/posts/undelete", undelete)
 	}
-	router.POST("/login", login)
 
 	router.Run()
 }

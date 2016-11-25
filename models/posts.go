@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/jinzhu/gorm"
@@ -17,7 +16,6 @@ func AllPosts(db *gorm.DB) []Post {
 func FindPost(db *gorm.DB, slug string) Post {
 	var post Post
 	db.Where("slug = ?", slug).First(&post)
-	fmt.Println(post)
 	return post
 }
 
@@ -28,6 +26,7 @@ func (p Post) CreatePost(db *gorm.DB, post Post) {
 }
 
 func (p Post) UpdatePost(db *gorm.DB, post Post) {
+	post.Body = processMarkdown(post.Body)
 	db.Model(&post).Updates(post)
 }
 

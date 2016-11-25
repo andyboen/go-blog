@@ -17,18 +17,19 @@
   New post
   </h1>
   <div id="editor">
-  <form action="/admin/new" method="post" class="pure-form">
+  <form action="{{ .path }}" method="post" class="pure-form">
     <label for="title">Title</label>
-    <input type="text" name="title">
+    <input type="text" name="title" {{if .title}} value="{{ .title }}" {{end}}>
     
     <label for="body">Body:</label>
-    <textarea :value="input" @input="update" class="pure-input-1-2" placeholder="Textareas work too" name="body"></textarea>
+    <textarea :value="input" @input="update" class="pure-input-1-2" placeholder="Textareas work too" name="body">{{if .markdown}}{{ .markdown}}{{end}}</textarea>
     
-    <label for="tag">Tag: </label>  
-    <input type="text" class="pure-input-1-2" placeholder="my-post" name="tag">
+    <label for="tag">Slug: </label>  
+    <input type="text" class="pure-input-1-2" placeholder="my-post" name="slug" {{if .slug}} value="{{ .slug}}" {{end}}>
         
     </fieldset>
     <br><br>
+    {{ if .id}}<input type="hidden" name="id" value="{{ .id}}">{{end}}
     <button type="submit" class="pure-button pure-button-primary">Submit</button>
   </form> 
 
@@ -40,7 +41,7 @@
 new Vue({
   el: '#editor',
   data: {
-    input: '# hello'
+    input: document.getElementById("markdown").value
   },
   computed: {
     compiledMarkdown: function () {
