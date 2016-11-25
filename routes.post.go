@@ -2,32 +2,58 @@ package main
 
 import (
 	"boen/models"
+	"html/template"
 	"net/http"
 	"strconv"
 
 	"gopkg.in/gin-gonic/gin.v1"
 )
 
+func toHTML(s string) template.HTML {
+	return template.HTML(s)
+}
+
 func allPosts(c *gin.Context) {
-	data := models.AllPosts(db)
-	c.String(http.StatusOK,
-		data.Title)
+	posts := models.AllPosts(db)
+	c.HTML(http.StatusOK,
+		"post_index.tmpl", posts)
 }
 
 func postByTag(c *gin.Context) {
-	data := models.FindPost(db, c.Param("tag"))
-	c.String(http.StatusOK,
-		data.Title)
+	post := models.FindPost(db, c.Param("slug"))
+	c.HTML(
+		http.StatusOK,
+		"post.tmpl",
+		gin.H{
+			"title": post.Title,
+			"body":  toHTML(post.Body),
+		})
 }
 
 func new(c *gin.Context) {
 	post := models.Post{
-		Title: c.PostForm("title"),
-		Body:  c.PostForm("body"),
-		Tag:   c.PostForm("tag"),
+		Title:    c.PostForm("title"),
+		Body:     c.PostForm("body"),
+		Markdown: c.PostForm("body"),
+		Slug:     c.PostForm("tag"),
 	}
 	post.CreatePost(db, post)
 	returnPostStatus(c, "Post Created", post)
+}
+
+func post(c *gin.Context) {
+	c.HTML(http.StatusOK, "new_post.tmpl", gin.H{})
+
+}
+
+func edit(c *gin.Context) {
+	post := models.FindPost(db, c.Param("slug"))
+	c.HTML(http.StatusOK, "edit_post.tmpl", gin.H{
+		"title":    post.Title,
+		"markdown": post.Markdown,
+		"slug":     post.Slug,
+		"id":       post.ID,
+	})
 }
 
 func update(c *gin.Context) {
@@ -38,10 +64,11 @@ func update(c *gin.Context) {
 	}
 
 	post := models.Post{
-		ID:    id,
-		Title: c.PostForm("title"),
-		Body:  c.PostForm("body"),
-		Tag:   c.PostForm("tag"),
+		ID:       id,
+		Title:    c.PostForm("title"),
+		Body:     c.PostForm("body"),
+		Markdown: c.PostForm("body"),
+		Slug:     c.PostForm("slug"),
 	}
 	post.UpdatePost(db, post)
 	returnPostStatus(c, "Post Updated", post)
@@ -81,7 +108,7 @@ func idToString(id string) (convID uint64, err error) {
 
 func invalidIDError(c *gin.Context) {
 	c.JSON(400, gin.H{
-		"status": "Error: Invalid id",
+		"status": "Error: Invalid ID",
 	})
 }
 
@@ -90,6 +117,6 @@ func returnPostStatus(c *gin.Context, status string, p models.Post) {
 		"status": status,
 		"title":  p.Title,
 		"body":   p.Body,
-		"tag":    p.Tag,
+		"slug":   p.Slug,
 	})
 }

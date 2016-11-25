@@ -1,0 +1,21 @@
+<html>
+<head>
+    <title>Blog</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+</head>
+<body>
+<h1> Posts</h1>
+
+<div id="post-index">
+    <ul>
+    {{ range .}}
+        <li><a href="{{.Slug}}">{{.Title}}</a></li>
+    {{ end }}
+    </ul>
+    
+</div>
+
+
+</body>
+</html>

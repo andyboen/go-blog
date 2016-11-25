@@ -27,5 +27,6 @@ type Post struct {
 	DeletedAt *time.Time
 	Title     string
 	Body      string
-	Tag       string
+	Markdown  string
+	Slug      string
 }
