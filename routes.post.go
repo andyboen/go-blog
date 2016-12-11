@@ -2,16 +2,10 @@ package main
 
 import (
 	"boen/models"
-	"html/template"
 	"net/http"
-	"strconv"
 
 	"gopkg.in/gin-gonic/gin.v1"
 )
-
-func toHTML(s string) template.HTML {
-	return template.HTML(s)
-}
 
 func allPosts(c *gin.Context) {
 	posts := models.AllPosts(db)
@@ -19,7 +13,7 @@ func allPosts(c *gin.Context) {
 		"index_post.tmpl", posts)
 }
 
-func postByTag(c *gin.Context) {
+func viewPost(c *gin.Context) {
 	post := models.FindPost(db, c.Param("slug"))
 	c.HTML(
 		http.StatusOK,
@@ -30,25 +24,25 @@ func postByTag(c *gin.Context) {
 		})
 }
 
-func create(c *gin.Context) {
+func createPost(c *gin.Context) {
 	post := models.Post{
 		Title:    c.PostForm("title"),
 		Body:     c.PostForm("body"),
 		Markdown: c.PostForm("body"),
-		Slug:     c.PostForm("tag"),
+		Slug:     c.PostForm("slug"),
 	}
 	post.CreatePost(db, post)
-	returnPostStatus(c, "Post Created", post)
+	//returnPostStatus(c, "Post Created", post)
 }
 
-func new(c *gin.Context) {
+func newPost(c *gin.Context) {
 	c.HTML(http.StatusOK, "form_post.tmpl", gin.H{
 		"path": "/admin/posts/create",
 	})
 
 }
 
-func edit(c *gin.Context) {
+func editPost(c *gin.Context) {
 	post := models.FindPost(db, c.Param("slug"))
 	c.HTML(http.StatusOK, "form_post.tmpl", gin.H{
 		"path":     "/admin/posts/update",
@@ -59,7 +53,7 @@ func edit(c *gin.Context) {
 	})
 }
 
-func update(c *gin.Context) {
+func updatePost(c *gin.Context) {
 	id, err := idToString(c.PostForm("id"))
 	if err != nil {
 		invalidIDError(c)
@@ -74,10 +68,10 @@ func update(c *gin.Context) {
 		Slug:     c.PostForm("slug"),
 	}
 	post.UpdatePost(db, post)
-	returnPostStatus(c, "Post Updated", post)
+	//returnPostStatus(c, "Post Updated", post)
 }
 
-func delete(c *gin.Context) {
+func deletePost(c *gin.Context) {
 	id, err := idToString(c.PostForm("id"))
 	if err != nil {
 		invalidIDError(c)
@@ -86,10 +80,10 @@ func delete(c *gin.Context) {
 
 	post := models.Post{ID: id}
 	post.DeletePost(db)
-	returnPostStatus(c, "Post Deleted", post)
+	//returnPostStatus(c, "Post Deleted", post)
 }
 
-func undelete(c *gin.Context) {
+func undeletePost(c *gin.Context) {
 	id, err := idToString(c.PostForm("id"))
 	if err != nil {
 		invalidIDError(c)
@@ -98,28 +92,5 @@ func undelete(c *gin.Context) {
 
 	post := models.Post{ID: id}
 	post.UnDeletePost(db)
-	returnPostStatus(c, "Post Undeleted", post)
-}
-
-func idToString(id string) (convID uint64, err error) {
-	convertedID, err := strconv.ParseUint(id, 10, 64)
-	if err != nil {
-		return 0, err
-	}
-	return convertedID, err
-}
-
-func invalidIDError(c *gin.Context) {
-	c.JSON(400, gin.H{
-		"status": "Error: Invalid ID",
-	})
-}
-
-func returnPostStatus(c *gin.Context, status string, p models.Post) {
-	c.JSON(200, gin.H{
-		"status": status,
-		"title":  p.Title,
-		"body":   p.Body,
-		"slug":   p.Slug,
-	})
+	//returnPostStatus(c, "Post Undeleted", post)
 }

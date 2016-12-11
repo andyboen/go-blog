@@ -1,17 +1,20 @@
 <html>
 <head>
     <title>Blog</title>
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.6/components/grid.min.css">
+
 
 </head>
 <body>
-<h1> {{ .title }}</h1>
+<div class="ui grid container">
 
-<div id="post-body">
-    {{ .body }}
-    
+    <h1 class="row"> {{ .title }}</h1>
+
+    <div id="post-body">
+        {{ .body }}
+        
+    </div>
 </div>
-
 
 </body>
 </html>

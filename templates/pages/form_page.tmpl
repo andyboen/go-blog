@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title> New post</title>
+    <title> New Page</title>
   <link rel="stylesheet" href="/assets/css/pure-min.css">
   
   <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
@@ -34,7 +34,7 @@
 </head>
 <body>
   <h1>
-  New post
+  New Page
   </h1>
   <div class="pure-menu pure-menu-horizontal" id="breadcrumbs">
     <ul class="pure-menu-list">
@@ -42,6 +42,8 @@
         <li class="pure-menu-item"><a href="/admin/posts" class="pure-menu-link">Back</a></li>
     </ul>
 </div>
+
+  <h2>{{ .flashes }}</h2>
       
   <div id="editor">
   <form action="{{ .path }}" method="post" class="pure-form pure-g">
@@ -50,7 +52,7 @@
       <input type="text" name="title" class="pure-u-2-5" {{if .title}} value="{{ .title }}" {{end}}>
     
       <label for="tag">Slug: </label>  
-      <input type="text"  class="pure-u-2-5" placeholder="my-post" name="slug" {{if .slug}} value="{{ .slug}}" {{end}}>
+      <input type="text"  class="pure-u-2-5" placeholder="my-page" name="slug" {{if .slug}} value="{{ .slug}}" {{end}}>
     </div>
     
     <div class="markdown-and-rendered pure-u-1-1">

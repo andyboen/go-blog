@@ -1,11 +1,6 @@
 package models
 
-import (
-	"strings"
-
-	"github.com/jinzhu/gorm"
-	"github.com/russross/blackfriday"
-)
+import "github.com/jinzhu/gorm"
 
 func AllPosts(db *gorm.DB) []Post {
 	var posts []Post
@@ -36,10 +31,4 @@ func (p Post) DeletePost(db *gorm.DB) {
 
 func (p Post) UnDeletePost(db *gorm.DB) {
 	db.Unscoped().Where("ID = ?", p.ID).Find(&p).Updates(map[string]interface{}{"deleted_at": nil})
-}
-
-func processMarkdown(text string) string {
-	html := blackfriday.MarkdownCommon([]byte(text))
-	strHTML := string(html)
-	return strings.Replace(strHTML, "\n", "", -1)
 }

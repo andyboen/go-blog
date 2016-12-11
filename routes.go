@@ -10,6 +10,6 @@ func index(c *gin.Context) {
 	c.String(http.StatusOK, "Index")
 }
 
-func about(c *gin.Context) {
-	c.String(http.StatusOK, "About")
+func notFound(c *gin.Context) {
+	c.HTML(http.StatusOK, "404.tmpl", gin.H{})
 }

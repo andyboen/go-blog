@@ -22,11 +22,22 @@ type UserSession struct {
 
 type Post struct {
 	ID        uint64 `gorm:"primary_key"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt *time.Time
 	Title     string
 	Body      string
 	Markdown  string
 	Slug      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
+}
+
+type Page struct {
+	ID        uint64 `gorm:"primary_key"`
+	Title     string
+	Body      string
+	Markdown  string
+	Slug      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time
 }
